@@ -1,0 +1,12 @@
+POST http://localhost:3333/subscriptions
+Content-Type: application/json
+
+// em "error" no send request aparece unsupported media type
+// precisamos informarque está enviando no formato JSON para REST API
+
+// em questão de validação
+
+{
+    "name": "Erik Hideyuki",
+    "email": "erikseki@hotmail.com"
+}

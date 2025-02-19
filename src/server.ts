@@ -1,19 +1,37 @@
-import {fastify} from 'fastify';
-import {fastifyCors} from '@fastify/cors'
+import { fastifyCors } from '@fastify/cors'
+import { fastifySwagger } from '@fastify/swagger'
+import { fastifySwaggerUi } from '@fastify/swagger-ui'
+import { fastify } from 'fastify'
 import {
-    validatorCompiler,
-    serializerCompiler,
-    ZodTypeProvider,
+  type ZodTypeProvider,
+  jsonSchemaTransform,
+  serializerCompiler,
+  validatorCompiler,
 } from 'fastify-type-provider-zod'
-import {z} from 'zod'
+import { env } from './env'
+import { subscribeToEventRoute } from './routes/subscribe-to-event-route'
 
-const app = fastify().withTypeProvider<ZodTypeProvider>();
+const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 app.setSerializerCompiler(serializerCompiler)
 app.setValidatorCompiler(validatorCompiler)
 // definir qual url o meu front end vai ter acesso ao backend, é possível deixar o origin como true ou sem especificação do origin porém em produção, precisa colocar a url
 app.register(fastifyCors, {
-    // origin: 'http://localhost:3000',
+  // origin: 'http://localhost:3000',
+})
+
+app.register(fastifySwagger, {
+  openapi: {
+    info: {
+      title: 'NLW Connect',
+      version: '0.0.1',
+    },
+  },
+  transform: jsonSchemaTransform,
+})
+
+app.register(fastifySwaggerUi, {
+  routePrefix: '/docs',
 })
 
 // métodos GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
@@ -23,30 +41,9 @@ app.register(fastifyCors, {
 //     return 'hello world';
 // })
 
-// cadastrar uma subscriptions de usuários com post
-app.post('/subscriptions', {
-    // um objeto schema 
-    // entradas de dados - body, search params, route params
-    schema: {
-        body: z.object({
-            name: z.string(),
-            email: z.string().email(),
-        }),
-    }
-}, (request, reply) =>{
-    const { name, email } = request.body
+app.register(subscribeToEventRoute)
 
-
-    // aqui seria a criação da inscrição no banco de dados/ como não integramos, não será adicionado.
-
-    return reply.status(201).send({
-        name,
-        email,
-    })
-    // ao invés do 200, utilizar o 201 sucesso e o recurso foi criado 
-})
-
-// para rodar no terminal na porta 3333 
-app.listen({ port: 3333}).then(() => {
-    console.log('HTTP server Running !!')
+// para rodar no terminal na porta 3333
+app.listen({ port: env.PORT }).then(() => {
+  console.log('HTTP server Running !!')
 })

@@ -10,3 +10,8 @@ Content-Type: application/json
     "name": "Erik Hideyuki",
     "email": "erikseki@hotmail.com"
 }
+
+### 
+
+
+GET http://localhost:3333/invites/erik123

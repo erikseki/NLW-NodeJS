@@ -7,9 +7,9 @@ Content-Type: application/json
 // em questão de validação
 
 {
-    "name": "Usuário Indicado",
-    "email": "indicado@hotmail.com.br",
-    "referrer": "15f1f619-23b2-4502-a72e-f4086481293b"
+    "name": "Usuário Indicado 3",
+    "email": "indicado3@hotmail.com.br",
+    "referrer": "41900b7b-ed60-4d95-a913-65082e716c16"
 }
 
 ### 
@@ -25,4 +25,10 @@ GET http://localhost:3333/subscribers/15f1f619-23b2-4502-a72e-f4086481293b/ranki
 
 GET http://localhost:3333/subscribers/15f1f619-23b2-4502-a72e-f4086481293b/ranking/count
 
+###
 
+GET http://localhost:3333/subscribers/15f1f619-23b2-4502-a72e-f4086481293b/ranking/position
+
+###
+
+GET http://localhost:3333/ranking

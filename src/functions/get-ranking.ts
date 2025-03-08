@@ -11,8 +11,23 @@ export async function getRanking() {
     subscriberIdAndScore[ranking[i]] = Number.parseInt(ranking[i + 1])
   }
 
-  const subscriber = await db
+  // consulta no banco de dados
+  const subscribers = await db
     .select()
     .from(subscriptions)
     .where(inArray(subscriptions.id, Object.keys(subscriberIdAndScore)))
+
+  const rankingWithScore = subscribers
+    .map(subscriber => {
+      return {
+        id: subscriber.id,
+        name: subscriber.name,
+        score: subscriberIdAndScore[subscriber.id],
+      }
+    })
+    .sort((sub1, sub2) => {
+      return sub2.score - sub1.score
+    })
+
+  return { rankingWithScore }
 }

@@ -8,7 +8,7 @@ import { redis } from '../redis/client'
 interface SubscribeToEventParams {
   name: string
   email: string
-  referrerId: string | null
+  referrerId?: string | null
 }
 
 export async function subscribeToEvent({
@@ -37,11 +37,11 @@ export async function subscribeToEvent({
     await redis.zincrby('referral:ranking', 1, referrerId)
   }
 
-  const subscriber = result[0]
+  // const subscriber = result[0]
 
   // return subscriber.id
 
   return {
-    subscriberId: subscriber.id,
+    subscriberId: result[0].id,
   }
 }

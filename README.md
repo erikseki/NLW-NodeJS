@@ -23,10 +23,16 @@ ORM
 REST API
 TSUP Convert 
 ```
+
+## 🗂️ Melhorando a Organização do Código
+```
+Utilizando o Services, Controller e Repository ( Repository pendente ) para realizar a separação das funções, rota e requisição do banco de dados.
+```
+
+
+## ⚙️ Executando os testes unitários e de integração
+
 <!--
-
-## ⚙️ Executando os testes
-
 Explicar como executar os testes automatizados para este sistema.
 
 ### 🔩 Analise os testes de ponta a ponta

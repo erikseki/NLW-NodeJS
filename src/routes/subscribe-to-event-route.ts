@@ -2,6 +2,7 @@ import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { subscribeController } from '../controller/subscribe-controller'
 import { subscribeToEvent } from '../functions/subscribe-to-event'
+
 // cadastrar uma subscriptions de usuários com post
 export const subscribeToEventRoute: FastifyPluginAsyncZod = async app => {
   app.post(

@@ -32,8 +32,9 @@ Utilizando o Services, Controller e Repository ( Repository pendente ) para real
 
 ## ⚙️ Executando os testes unitários e de integração
 
-<!--
 Explicar como executar os testes automatizados para este sistema.
+
+<!--
 
 ### 🔩 Analise os testes de ponta a ponta
 

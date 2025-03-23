@@ -1,6 +1,7 @@
 // função responsável por inscrever o usuário no evento.
 
 import { eq } from 'drizzle-orm'
+import { SubscriptionRepository } from '../_repositories/subscribe-repository'
 import { db } from '../drizzle/client'
 import { subscriptions } from '../drizzle/schema/subscriptions'
 import { redis } from '../redis/client'

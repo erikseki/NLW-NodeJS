@@ -1,12 +1,13 @@
-export default async () => {
-  const { defineConfig } = await import('vitest/config')
+import dotenv from 'dotenv'
+import { defineConfig } from 'vitest/config'
 
-  return defineConfig({
-    test: {
-      globals: true,
-    },
-  })
-}
+dotenv.config({ path: '.env.test' })
+
+export default defineConfig({
+  test: {
+    globals: true,
+  },
+})
 
 // export default defineConfig({
 //   test: {

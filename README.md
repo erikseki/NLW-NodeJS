@@ -25,16 +25,152 @@ TSUP Convert
 ```
 
 ## 🗂️ Melhorando a Organização do Código
-```
+`
 Utilizando o Services, Controller e Repository ( Repository pendente ) para realizar a separação das funções, rota e requisição do banco de dados.
-```
+`
 
 
 ## ⚙️ Executando os testes unitários e de integração
 
-Explicar como executar os testes automatizados para este sistema.
+<!-- Explicar como executar os testes automatizados para este sistema. -->
 
+### Teste para *subscribeToEvent*
+![Testes](https://img.shields.io/badge/testes-passando-brightgreen)
+
+Este teste unitário foi incluído no projeto para garantir a confiabilidade e a correta funcionalidade da função subscribeToEvent, que é responsável pelo cadastro de assinantes em um evento. **Essa função interage com um banco de dados (Drizzle ORM)**
+
+- Usuários existentes sejam identificados corretamente.
+- Novos assinantes sejam inseridos corretamente no banco de dados.
+- O ranking de indicação seja atualizado corretamente quando um `referrerId` for fornecido.
+
+
+
+
+| Cenário                     | Resultado Esperado |
+|-----------------------------|--------------------|
+| E-mail já cadastrado        | Retorna ID existente |
+| Novo e-mail                 | Cria novo assinante |
+| Com `referrerId` informado | Atualiza ranking |
+
+</br>
+
+#### Bibliotecas Utilizadas
+
+O teste utiliza:
+
+- `vitest`: framework de testes para JavaScript e TypeScript.
+- `vi.mock`: para mockar dependências externas (banco de dados e Redis).
+- `expect`: para validar os resultados esperados.
+
+</br>
+
+#### Mocks Criados
+
+##### 1. Mock do Banco de Dados (Drizzle ORM)
+
+```javascript
+vi.mock('../src/drizzle/client', () => ({
+  db: {
+    select: vi.fn().mockReturnValue({
+      from: vi.fn().mockReturnThis(), // Mockando o método "from"
+      where: vi.fn().mockReturnThis(), // Mockando o método "where"
+      select: vi.fn().mockReturnValue([{ id: '1' }]), // Mockando o retorno do "select"
+    }),
+    insert: vi.fn().mockReturnValue({
+      values: vi.fn().mockReturnValue({
+        returning: vi.fn().mockReturnValue([{ id: '1' }]), // Mockando inserção com retorno de ID
+      }),
+    }),
+  },
+}))
+```
+Esse mock simula as operações do Drizzle ORM:
+
+- `select.from.where` retorna um assinante existente (para testes de e-mails já cadastrados).
+- `insert.values.returning` simula a inserção de um novo assinante no banco.
+
+</br>
+
+##### 2. Mock do Redis
+
+```javascript
+vi.mock('../src/redis/client', () => ({
+  redis: {
+    zincrby: vi.fn().mockResolvedValue(1), // Mockando a resposta como sucesso
+  },
+}))
+```
+Esse mock evita chamadas reais ao Redis, substituindo a função zincrby por uma versão mockada.
+</br>
+
+#### Casos de Teste Implementados
+
+##### 1. Retorno do ID do assinante se o e-mail já existir
+
+```javascript
+it('deve criar um novo assinante se o e-mail não existir', async () => {
+  db.select.mockImplementation(() => ({
+    from: vi.fn(() => ({
+      where: vi.fn(() => []), // Simulando usuário não encontrado
+    })),
+  }))
+
+  const result = await subscribeToEvent({
+    name: 'Novo Usuário',
+    email: 'novo@email.com',
+  })
+
+  expect(result).toEqual({ subscriberId: '2' }) // Novo ID criado
+  expect(db.insert).toHaveBeenCalled()
+})
+```
+
+Esse teste garante que, se um e-mail já estiver cadastrado, o ID do assinante existente será retornado sem criar um novo registro ✅
+
+</br>
+
+##### 2. Cria um novo assinante se o e-mail não existir
+
+```javascript
+it('deve criar um novo assinante se o e-mail não existir', async () => {
+  db.select.mockImplementation(() => ({
+    from: vi.fn(() => ({
+      where: vi.fn(() => []), // Simulando usuário não encontrado
+    })),
+  }))
+
+  const result = await subscribeToEvent({
+    name: 'Novo Usuário',
+    email: 'novo@email.com',
+  })
+
+  expect(result).toEqual({ subscriberId: '2' }) // Novo ID criado
+  expect(db.insert).toHaveBeenCalled()
+})
+```
+Esse teste garante que, quando um e-mail novo é passado, um novo assinante é corretamente inserido no banco de dados ✅
+
+</br>
+
+##### 3. Atualiza o ranking no Redis se houver um referrerId
+
+```javascript
+it('deve incrementar o ranking no Redis se referrerId for passado', async () => {
+  await subscribeToEvent({
+    name: 'Referenciado',
+    email: 'referenciado@email.com',
+    referrerId: '123',
+  })
+
+  expect(redis.zincrby).toHaveBeenCalledWith('referral:ranking', 1, '123')
+})
+```
+Esse teste garante que, se um `referrerId` for fornecido, o ranking de indicação será corretamente atualizado no Redis ✅
+
+</br>
 <!--
+
+
 
 ### 🔩 Analise os testes de ponta a ponta
 

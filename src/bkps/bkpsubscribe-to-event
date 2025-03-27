@@ -1,0 +1,73 @@
+// função responsável por inscrever o usuário no evento.
+
+// import { eq } from 'drizzle-orm'
+// import { db } from '../drizzle/client'
+// import { subscriptions } from '../drizzle/schema/subscriptions'
+// import { redis } from '../redis/client'
+// import { SubscriptionRepository } from '../repositories/subscriptionRepository'
+
+// interface SubscribeToEventParams {
+//   name: string
+//   email: string
+//   referrerId?: string | null
+// }
+
+// export async function subscribeToEvent({
+//   name,
+//   email,
+//   referrerId,
+// }: SubscribeToEventParams) {
+//   // Tenta buscar no cache primeiro (Otimização)
+//   const cachedSubscriberId = await redis.get(`subscriber${email}`)
+//   if (cachedSubscriberId) {
+//     return { subscriberId: cachedSubscriberId }
+//   }
+
+//   // busca no Banco de dados
+//   const subscribers = await SubscriptionRepository.findByEmail(email)
+
+//   if (subscribers.length > 0) {
+//     const subscriberId = subscribers[0].id
+
+//     // Armazena no cache para acessos futuros
+//     await redis.set(`subscriber:${email}`, subscriberId, 'EX', 3600) // 1 hora de cache
+
+//     return { subscriberId }
+//   }
+
+//   // Cria um novo assinante
+//   const result = await SubscriptionRepository.createSubscriber(name, email)
+
+//   const subscriberId = result[0].id
+
+//   // Atualiza ranking no Redis se houver referrerId
+//   if (referrerId) {
+//     await redis.zincrby('referral:ranking', 1, referrerId)
+//   }
+
+//   // Armazena no cache o novo assinante
+
+//   await redis.set(`subscriberId:${email}`, subscriberId, 'EX', 3600)
+
+//   return { subscriberId }
+
+// const result = await db
+//   .insert(subscriptions)
+//   .values({
+//     name,
+//     email,
+//   })
+//   .returning()
+
+// if (referrerId) {
+//   await redis.zincrby('referral:ranking', 1, referrerId)
+// }
+
+// const subscriber = result[0]
+
+// return subscriber.id
+
+// return {
+//   subscriberId: result[0].id,
+// }
+// }

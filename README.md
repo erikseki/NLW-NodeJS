@@ -1,5 +1,4 @@
 # NLW-NodeJS 🚀
-NLW-NodeJS
 
 **[Link do Notion para visualizar os diagramas/fluxogramas](smart-ground-475.notion.site/Mapa-Mental-NLW-1b1a3bcdd44380aa8938c814ceb7fbcd?pvs=74)**
 
@@ -168,6 +167,7 @@ it('deve incrementar o ranking no Redis se referrerId for passado', async () => 
 Esse teste garante que, se um `referrerId` for fornecido, o ranking de indicação será corretamente atualizado no Redis ✅
 
 </br>
+
 <!--
 
 

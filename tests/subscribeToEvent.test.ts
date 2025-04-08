@@ -34,7 +34,7 @@ describe('subscribeToEvent', () => {
       email: 'erik@email.com',
     })
 
-    expect(result).toEqual({ subscriberId: '1' }) // Espera o ID '1' que vem do mock
+    expect(result).toEqual({ subscriberId: '1' }) // Espera o ID '1' que vem do mock é igual
     expect(db.select).toHaveBeenCalled() // Verifica se a função select foi chamada
   })
 
